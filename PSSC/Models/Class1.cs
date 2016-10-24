@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,177 +6,272 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    class Facultate
-    {
-        public string denumire { get; }
-        public string[] departamente { get; }
 
-        List<Profesor> listaProfesori;
-        public Facultate(string denumire, string[] departamente, List<Profesor> listaProfesori)
+
+    public class Discipline
+    {
+        string _name;
+        int _year;
+        string _profName;
+        int[] _gradeExam;
+        int[] _gradeLab;
+        int _attendance;
+        int _type; // distributed ( 0 ) or final exam ( 1 )
+        double _k;  // ratio to calculate the average
+        public UInt16 _courseHours;
+        public UInt16 _labHours;
+        public UInt16 _projectHours;
+        public UInt16 _credits;
+        public string _hall;
+
+        public Discipline(string name, int year, string professorName, int type, UInt16 courseHours, UInt16 labHours, UInt16 projectHours, UInt16 credits, string hall)
         {
-            this.denumire = denumire;
-            this.departamente = departamente;
-            this.listaProfesori = listaProfesori;
+            this._name = name;
+            this._year = year;
+            this._profName = professorName;
+            this._type = type;
+            this._courseHours = courseHours;
+            this._labHours = labHours;
+            this._projectHours = projectHours;
+            this._credits = credits;
+            this._hall = hall;
         }
-        public void Afisare()
+
+        public void setRatio(double ratio)
         {
-            StringBuilder str = new StringBuilder();
-            str.Append("Denumire facultate : " + denumire + "\n");
-            str.Append("Departamente : " + departamente + "\n");
-            str.Append("Profesori : ");
-            string s = str.ToString();
-            Console.WriteLine(s);
-            foreach (var item in listaProfesori)
+            this._k = ratio;
+        }
+
+        public double getRatio()
+        {
+            return _k;
+        }
+
+        public int getDisciplineType()
+        {
+            return _type;
+        }
+
+        public void setGradeExam(int first, int second)
+        {
+            this._gradeExam[0] = first;
+            this._gradeExam[1] = second;
+        }
+
+        public void setGradeLab(int grade)
+        {
+            int i = 0;
+            while (_gradeLab[i] != 0)
+            { i++; }
+            this._gradeLab[i] = grade;
+        }
+
+        public void setAttend_yearce(int a)
+        {
+            this._attendance = a;
+        }
+
+        public string getHall()
+        {
+            return _hall;
+        }
+
+        public UInt16 getCourseHours()
+        {
+            return _courseHours;
+        }
+
+        public UInt16 getLabHours()
+        {
+            return _labHours;
+        }
+
+        public UInt16 getProjectHours()
+        {
+            return _projectHours;
+        }
+
+        public UInt16 getCredits()
+        {
+            return _credits;
+        }
+
+        public double getExamGrade()
+        {
+            if (_gradeExam[1] != 0)
             {
-                Console.Write(item + " ");
-            }
-        }
-    }
-
-    public class Materie
-    {
-        public string denumire { get; }
-        public UInt16 nrOreCurs { get; }
-        public UInt16 nrOreLab { get; }
-        public UInt16 nrOreProiect { get; }
-        public UInt16 nrCredite { get; }
-        public string sala { get; set; }
-        public Materie(string denumire, UInt16 nrOreCurs, UInt16 nrOreLab, UInt16 nrOreProiect, UInt16 nrCredite, string sala)
-        {
-            this.denumire = denumire;
-            this.nrOreCurs = nrOreCurs;
-            this.nrOreLab = nrOreLab;
-            this.nrOreProiect = nrOreProiect;
-            this.nrCredite = nrCredite;
-            this.sala = sala;
-        }
-        public void Afisare()
-        {
-            StringBuilder str = new StringBuilder();
-            str.Append("Denumire materie : " + denumire + "\n");
-            str.Append("Numar ore curs : " + nrOreCurs + "\n");
-            str.Append("Numar ore laborator : " + nrOreLab + "\n");
-            str.Append("Numar ore proiect : " + nrOreProiect + "\n");
-            str.Append("Numar credite : " + nrCredite + "\n");
-            str.Append("Sala : " + sala + "\n");
-            string s = str.ToString();
-            Console.WriteLine(s);
-        }
-    }
-
-    public class Persoana
-    {
-        public string nume { get; }
-        public string prenume { get; }
-        public string adresa { get; }
-        public string cnp { get; }
-        public string sex { get; }
-        public string dataNasterii { get; }
-        public Persoana(string nume, string prenume, string adresa, string cnp)
-        {
-            this.nume = nume;
-            this.prenume = prenume;
-            this.adresa = adresa;
-            this.cnp = cnp;
-            this.sex = CalculSex(this.cnp[0]);
-            this.dataNasterii = CalculDataNasterii(cnp);
-        }
-
-        public virtual void Afisare()
-        {
-            StringBuilder str = new StringBuilder();
-            str.Append("Nume : " + nume + "\n");
-            str.Append("Prenume : " + prenume + "\n");
-            str.Append("Adresa : " + adresa + "\n");
-            str.Append("CNP : " + cnp + "\n");
-            str.Append("Sex : " + sex + "\n");
-            str.Append("Data nasterii : " + dataNasterii);
-            string s = str.ToString();
-            Console.WriteLine(s);
-        }
-
-        private string CalculSex(char s)
-        {
-            int val = Convert.ToInt16(s);
-            string sex = string.Empty;
-            if (s % 2 == 0)
-            {
-                sex = "F";
+                return (_gradeExam[0] + _gradeExam[1]) / 2;
             }
             else
             {
-                sex = "M";
+                return _gradeExam[0];
             }
-            return sex;
         }
 
-        private string CalculDataNasterii(string cnp)
+        public double getDisciplineGrade()
         {
-            string dataNast = string.Concat(cnp[5] + "" + cnp[6] + "." + cnp[3] + cnp[4] + ".");
-            if (cnp[0] == '1' || cnp[0] == '2')
+            double avgLab = 0;
+            double sum = 0;
+            for (int i = 0; i < _gradeLab.Length; i++)
             {
-                dataNast = dataNast + "19" + cnp[1] + cnp[2];
+                sum += _gradeLab[i];
             }
-            if (cnp[0] == '3' || cnp[0] == '4')
-            {
-                dataNast = dataNast + "18" + cnp[1] + cnp[2];
-            }
-            if (cnp[0] == '5' || cnp[0] == '6')
-            {
-                dataNast = dataNast + "20" + cnp[1] + cnp[2];
-            }
-            return dataNast;
+            avgLab = sum / _gradeLab.Length;
+            return (getExamGrade() * (1 - getRatio()) + getRatio() * avgLab);
         }
     }
 
-    public class Student : Persoana
+    class College
     {
-        UInt16 marca { get; }
-        UInt16 an { get; set; }
-        string facultate { get; }
-        public Student(string nume, string prenume, string adresa, string cnp, UInt16 marca, string facultate, UInt16 an) : base(nume, prenume, adresa, cnp)
+        public string _lastName;
+        public string[] _departments { get; set; }
+
+        List<Professor> _professorList;
+
+        public College(string lastName, string[] departments, List<Professor> professorList)
         {
-            this.marca = marca;
-            this.an = an;
-            this.facultate = facultate;
+            this._lastName = lastName;
+            this._departments = departments;
+            this._professorList = professorList;
         }
 
-        public override void Afisare()
+        public string getName()
         {
-            base.Afisare();
-            StringBuilder str = new StringBuilder();
-            str.Append("Marca : " + marca + "\n");
-            str.Append("An : " + an + "\n");
-            str.Append("Facultate : " + facultate + "\n");
-            string s = str.ToString();
-            Console.WriteLine(s);
+            return _lastName;
+        }
+
+        public void CreateDisciplineList()
+        { }
+
+        public void AssignDisciplines(studentList)
+        { }
+    }
+
+    public class Person
+    {
+        public string _lastName;
+        public string _firstName;
+        public string _address;
+        public string _cnp;
+        public string _gender;
+        public string _dateOfBirth;
+
+        public Person(string lastName, string firstName, string address, string cnp)
+        {
+            this._lastName = lastName;
+            this._firstName = firstName;
+            this._address = address;
+            this._cnp = cnp;
+            this._gender = GetGender(this._cnp[0]);
+            this._dateOfBirth = GetDateOfBirth(cnp);
+        }
+
+        public string getLastName()
+        {
+            return _lastName;
+        }
+
+        public string getFirstName()
+        {
+            return _firstName;
+        }
+
+        public string getAddress()
+        {
+            return _address;
+        }
+
+        public string getCNP()
+        {
+            return _cnp;
+        }
+
+        public string getGender()
+        {
+            return _gender;
+        }
+
+        public string getDateOfBirth()
+        {
+            return _dateOfBirth;
+        }
+
+        private string GetGender(char s)
+        {
+            int val = Convert.ToInt16(s);
+            string _gender = string.Empty;
+            if (s % 2 == 0)
+            {
+                _gender = "F";
+            }
+            else
+            {
+                _gender = "M";
+            }
+            return _gender;
+        }
+
+        private string GetDateOfBirth(string _cnp)
+        {
+            string dat_yearast = string.Concat(_cnp[5] + "" + _cnp[6] + "." + _cnp[3] + _cnp[4] + ".");
+            if (_cnp[0] == '1' || _cnp[0] == '2')
+            {
+                dat_yearast = dat_yearast + "19" + _cnp[1] + _cnp[2];
+            }
+            if (_cnp[0] == '3' || _cnp[0] == '4')
+            {
+                dat_yearast = dat_yearast + "18" + _cnp[1] + _cnp[2];
+            }
+            if (_cnp[0] == '5' || _cnp[0] == '6')
+            {
+                dat_yearast = dat_yearast + "20" + _cnp[1] + _cnp[2];
+            }
+            return dat_yearast;
         }
     }
 
-    public class Profesor : Persoana
+    public class Student : Person
     {
-        string departament { get; }
-        UInt16 salariu { get; set; }
-        Materie[] materii { get; set; }
-        public Profesor(string nume, string prenume, string adresa, string cnp, string dep, UInt16 salariu, params Materie[] materii) : base(nume, prenume, adresa, cnp)
+        UInt16 _mark;
+        UInt16 _year { get; set; }
+        string _college;
+        public Student(string lastName, string firstName, string address, string cnp, UInt16 mark, string college, UInt16 year)
+            : base(lastName, firstName, address, cnp)
         {
-            this.departament = dep;
-            this.salariu = salariu;
-            this.materii = materii;
+            this._mark = mark;
+            this._year = year;
+            this._college = college;
         }
-        public override void Afisare()
+
+        public UInt16 getMark()
         {
-            base.Afisare();
-            StringBuilder str = new StringBuilder();
-            str.Append("Departament : " + departament + "\n");
-            str.Append("Salariu : " + salariu + "\n");
-            str.Append("Materii : ");
-            string s = str.ToString();
-            Console.WriteLine(s);
-            foreach (Materie m in materii)
-            {
-                Console.WriteLine(m.denumire + " in sala : " + m.sala);
-            }
+            return _mark;
         }
+
+        public string getCollege()
+        {
+            return _college;
+        }
+
+    }
+
+    public class Professor : Person
+    {
+        string _department;
+        UInt16 _wage { get; set; }
+        Discipline[] _disciplines { get; set; }
+        public Professor(string lastName, string firstName, string address, string cnp, string department, UInt16 wage, params Discipline[] disciplines)
+            : base(lastName, firstName, address, cnp)
+        {
+            this._department = department;
+            this._wage = wage;
+            this._disciplines = disciplines;
+        }
+
+        public string getDepartment()
+        {
+            return _department;
+        }
+
     }
 }
